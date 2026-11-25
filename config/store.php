@@ -28,7 +28,7 @@ return [
             'video' => 'videos/look-lrt.mp4', 'poster' => 'images/looks/look-lrt.jpg', 'card' => 'images/looks/lowangle-lrt.jpg', 'w' => 1920, 'h' => 1080,
             'pins' => [
                 ['product' => 'dot-6-panel-cap-ink', 'x' => 0.761, 'y' => 0.042],
-                ['product' => 'dot-heavyweight-tee-ink', 'x' => 0.770, 'y' => 0.236],
+                ['product' => 'dot-heavyweight-tee-ink', 'x' => 0.772, 'y' => 0.222],
                 ['product' => 'lrt-coach-jacket-black', 'x' => 0.659, 'y' => 0.352],
                 ['product' => 'pasar-cargo-pants-olive', 'x' => 0.686, 'y' => 0.519],
             ],

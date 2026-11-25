@@ -32,25 +32,46 @@
         <div class="absolute inset-0 z-20 pointer-events-none bg-gradient-to-r from-[#0b0d11]/85 via-[#0b0d11]/35 to-transparent"></div>
         <div class="absolute inset-x-0 bottom-0 h-2/5 z-20 pointer-events-none bg-gradient-to-t from-[#0b0d11]/90 to-transparent"></div>
 
-        {{-- hotspots --}}
-        <template x-for="(pin, p) in pins" :key="looks[current].key + p">
-            <div class="absolute z-30 -translate-x-1/2 -translate-y-1/2" :style="`left:${pin.left}px;top:${pin.top}px`" x-show="pin.visible"
-                 @mouseenter="open = p" @mouseleave="open = null">
-                <button type="button" data-pin @click="open = p"
-                        class="group relative grid place-items-center size-9 rounded-full bg-white/20 backdrop-blur-md ring-1 ring-white/60 hover:bg-white/35 transition"
-                        :aria-label="`${pin.name}, RM ${pin.price.toFixed(2)}`">
-                    <span class="absolute inset-0 rounded-full ring-2 ring-white/50 animate-ping [animation-duration:2.4s]"></span>
-                    <span class="size-3 rounded-full bg-[#FF4A3D] ring-2 ring-white"></span>
-                </button>
-                <a :href="pin.url" x-show="open === p" x-transition.opacity.duration.150ms
-                   class="absolute left-1/2 -translate-x-1/2 top-11 w-56 flex items-center gap-3 rounded-2xl bg-white text-[#15171a] p-2.5 pr-3 shadow-xl ring-1 ring-black/5"
-                   :class="pin.left > stageW - 140 ? 'left-auto right-0 translate-x-0' : ''">
-                    <img :src="pin.image" alt="" class="size-14 rounded-xl object-cover bg-[#f5f4f1] shrink-0">
-                    <span class="min-w-0">
-                        <span class="block text-[13px] font-bold leading-snug" x-text="pin.name"></span>
-                        <span class="block text-[13px] text-[#5b636e] mt-0.5" x-text="`RM ${pin.price.toFixed(2)}`"></span>
-                    </span>
-                </a>
+        {{-- phones / tablets: tap-dots with a small card --}}
+        <template x-if="!catalog">
+            <div>
+            <template x-for="(pin, p) in pins" :key="looks[current].key + p">
+                <div class="absolute z-30 -translate-x-1/2 -translate-y-1/2" :style="`left:${pin.left}px;top:${pin.top}px`" x-show="pin.visible"
+                     @mouseenter="open = p" @mouseleave="open = null">
+                    <button type="button" data-pin @click="open = p"
+                            class="group relative grid place-items-center size-9 rounded-full bg-white/20 backdrop-blur-md ring-1 ring-white/60 hover:bg-white/35 transition"
+                            :aria-label="`${pin.name}, RM ${pin.price.toFixed(2)}`">
+                        <span class="absolute inset-0 rounded-full ring-2 ring-white/50 animate-ping [animation-duration:2.4s]"></span>
+                        <span class="size-3 rounded-full bg-[#FF4A3D] ring-2 ring-white"></span>
+                    </button>
+                    <a :href="pin.url" x-show="open === p" x-transition.opacity.duration.150ms
+                       class="absolute left-1/2 -translate-x-1/2 top-11 w-56 flex items-center gap-3 rounded-2xl bg-white text-[#15171a] p-2.5 pr-3 shadow-xl ring-1 ring-black/5"
+                       :class="pin.left > stageW - 140 ? 'left-auto right-0 translate-x-0' : ''">
+                        <img :src="pin.image" alt="" class="size-14 rounded-xl object-cover bg-[#f5f4f1] shrink-0">
+                        <span class="min-w-0">
+                            <span class="block text-[13px] font-bold leading-snug" x-text="pin.name"></span>
+                            <span class="block text-[13px] text-[#5b636e] mt-0.5" x-text="`RM ${pin.price.toFixed(2)}`"></span>
+                        </span>
+                    </a>
+                </div>
+            </template>
+            </div>
+        </template>
+
+        {{-- desktop: living catalog. Each piece floats beside the model; a dashed line runs from its card to the red dot on the garment. --}}
+        <template x-if="catalog">
+            <div class="absolute inset-0 z-30 pointer-events-none" :key="looks[current].key">
+                <div class="absolute inset-0" aria-hidden="true" x-html="linesSvg"></div>
+                <template x-for="(c, i) in cards" :key="looks[current].key + 'c' + i">
+                    <a :href="c.pin.url" class="cat-card pointer-events-auto absolute flex items-center gap-3 w-[236px] rounded-2xl bg-white/92 backdrop-blur-md text-[#15171a] p-2 pr-3 shadow-[0_18px_40px_-18px_rgba(0,0,0,.6)] ring-1 ring-white/40 hover:bg-white transition"
+                       :style="`left:${c.x}px;top:${c.y}px;--d:${i * 110}ms`">
+                        <img :src="c.pin.image" alt="" class="size-[60px] rounded-xl object-cover bg-[#f5f4f1] shrink-0">
+                        <span class="min-w-0">
+                            <span class="block text-[13px] font-bold leading-snug" x-text="c.pin.name"></span>
+                            <span class="block text-[13px] text-[#5b636e] mt-0.5" x-text="`RM ${c.pin.price.toFixed(2)}`"></span>
+                        </span>
+                    </a>
+                </template>
             </div>
         </template>
     </div>
@@ -69,7 +90,7 @@
                     </span>
                 </template>
             </h1>
-            <p class="mt-5 text-[15px] sm:text-base text-[#f2f4f7]/75 max-w-md">{{ config('store.collection') }}. Tap a dot to shop the piece. Every item carries one red dot.</p>
+            <p class="mt-5 text-[15px] sm:text-base text-[#f2f4f7]/75 max-w-md">{{ config('store.collection') }}. <span x-show="!catalog">Tap a dot to shop the piece.</span><span x-show="catalog" x-cloak>Every piece in the look, pinned to where it's worn.</span> Every item carries one red dot.</p>
             <div class="mt-7 flex flex-wrap gap-2.5">
                 <a href="#products" class="inline-flex items-center gap-2 rounded-xl bg-[#f2f4f7] text-[#0b0d11] px-5 py-3 text-sm font-bold hover:bg-white transition">Shop the drop</a>
                 <a href="#looks" class="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 backdrop-blur-md px-5 py-3 text-sm font-bold hover:bg-white/15 transition">See all looks</a>
@@ -90,7 +111,11 @@
                     </button>
                 </template>
             </div>
-            <div class="md:ml-auto flex items-center gap-3 rounded-2xl bg-white/10 backdrop-blur-md ring-1 ring-white/15 p-2 pr-3 overflow-x-auto max-w-full">
+            <div x-show="catalog" class="md:ml-auto text-right" :key="'t' + looks[current].key">
+                <p class="cat-total text-[11px] font-semibold tracking-[0.18em] uppercase text-[#f2f4f7]/70" x-text="`Full look · ${uniquePins.length} pieces`"></p>
+                <p class="cat-total font-display text-6xl xl:text-7xl tracking-[-0.04em] leading-none mt-2">RM <span x-text="looks[current].total.toFixed(0)"></span><span class="inline-block size-[0.16em] rounded-full bg-[#FF4A3D] ml-[0.05em]"></span></p>
+            </div>
+            <div x-show="!catalog" class="md:ml-auto flex items-center gap-3 rounded-2xl bg-white/10 backdrop-blur-md ring-1 ring-white/15 p-2 pr-3 overflow-x-auto max-w-full">
                 <span class="hidden sm:block pl-2 pr-1 text-xs font-semibold text-[#f2f4f7]/70 whitespace-nowrap">In this look</span>
                 <template x-for="(pin, p) in uniquePins" :key="looks[current].key + 'u' + p">
                     <a :href="pin.url" class="shrink-0" :title="pin.name" @mouseenter="open = pins.indexOf(pin)" @mouseleave="open = null">
@@ -106,7 +131,7 @@
 <script>
 function lookHero(looks) {
     return {
-        looks, current: 0, progress: 0, open: null, pins: [], stageW: 0,
+        looks, current: 0, progress: 0, open: null, pins: [], cards: [], linesSvg: '', catalog: false, stageW: 0,
         posX: 0.5, posY: 0.04, reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
         timer: null, started: 0, plays: 0, minSeconds: 7,
         get uniquePins() { const seen = new Set(); return this.pins.filter(p => !seen.has(p.product) && seen.add(p.product)); },
@@ -123,6 +148,32 @@ function lookHero(looks) {
             this.pins = look.pins.map(p => {
                 const left = ox + p.x * dw, top = oy + p.y * dh;
                 return { ...p, left, top, visible: left > 24 && left < cw - 24 && top > 20 && top < maxTop };
+            });
+            this.catalog = cw >= 1280;
+            if (this.catalog) {
+                this.cards = this.layoutCards(cw, ch);
+                // built as a string: Alpine templates don't render inside <svg>
+                const k = this.looks[this.current].key;
+                this.linesSvg = `<svg class="absolute inset-0 w-full h-full overflow-visible">` + this.cards.map((c, i) => {
+                    const d = i * 110 + 150, id = `cm-${k}-${i}`;
+                    return `<g style="--d:${d}ms"><mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${cw}" height="${ch}"><path class="cat-line" d="${c.path}" pathLength="1" fill="none" stroke="#fff" stroke-width="6"/></mask>`
+                         + `<path d="${c.path}" mask="url(#${id})" fill="none" stroke="#f2f4f7" stroke-opacity=".95" stroke-width="1.6" stroke-dasharray="5 6" stroke-linecap="round"/>`
+                         + `<circle class="cat-dot" cx="${c.pin.left}" cy="${c.pin.top}" r="10" fill="none" stroke="#f2f4f7" stroke-width="1.6"/></g>`;
+                }).join('') + `</svg>`;
+            } else { this.cards = []; this.linesSvg = ''; }
+        },
+        // Cards stack in a column at the right edge, each as close to its garment's height as it can be
+        // without overlapping; the dashed line runs card → elbow → red dot.
+        layoutCards(cw, ch) {
+            const W = 236, H = 76, gap = 14, top = 28, bottom = ch - 190, x = cw - W - 40;
+            const pins = this.pins.filter(p => p.left > 0 && p.left < x - 20).sort((a, b) => a.top - b.top);
+            let ys = pins.map(p => Math.min(Math.max(p.top - H / 2, top), bottom - H));
+            for (let i = 1; i < ys.length; i++) ys[i] = Math.max(ys[i], ys[i - 1] + H + gap);
+            const over = ys.length ? ys[ys.length - 1] + H - bottom : 0;
+            if (over > 0) ys = ys.map(y => Math.max(top, y - over));
+            return pins.map((pin, i) => {
+                const y = ys[i], cy = y + H / 2, knee = Math.max(pin.left + 40, x - 70);
+                return { pin, x, y, path: `M ${x} ${cy} L ${knee} ${cy} L ${pin.left} ${pin.top}` };
             });
         },
         video() { return this.$root.querySelector(`video[data-look="${this.current}"]`); },
