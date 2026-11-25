@@ -48,6 +48,11 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index');
         }
 
+        // A fresh clone has no payment keys yet: say so before creating an order that can't be paid.
+        if (!config('services.billplz.api_key') || !config('services.billplz.collection_id')) {
+            return back()->withInput()->with('error', 'Payments are not connected yet. Add your Billplz sandbox keys to .env (see the README).');
+        }
+
         // Re-validate stock before creating order
         foreach ($cart as $item) {
             $product = Product::find($item['product_id']);

@@ -15,7 +15,8 @@
 
     {{-- Left: Form — light --}}
     <div class="md:col-span-2 bg-[#f5f4f1] px-6 md:px-10 py-10">
-        <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="space-y-8">
+        <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="space-y-8"
+              x-data @submit="$dispatch('checkout-submitting')">
             @csrf
 
             {{-- Customer info --}}
@@ -156,7 +157,7 @@
 
         <div class="mt-8 space-y-3" x-data="{ submitting: false }">
             <button type="submit" form="checkout-form"
-                    @click="submitting = true"
+                    @checkout-submitting.window="submitting = true"
                     :disabled="submitting"
                     class="w-full bg-[#15171a] hover:bg-[#2b2f36] disabled:opacity-60 text-[#f5f4f1] font-bold py-4 rounded-lg transition uppercase tracking-wider text-sm">
                 <span x-show="!submitting">Pay Now — RM {{ number_format($total, 2) }}</span>
