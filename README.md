@@ -117,7 +117,7 @@ There are notes for shared hosting (Hostinger) in [`docs/hostinger-deploy.md`](d
 
 ## Credits
 
-Built by [sitemys.](https://sitemys.com), a web and systems studio in Malaysia. Product photos and look stills were generated with OpenAI's image model; the look clips were generated from those stills with BytePlus Seedance. All of it is demo content, not real products or real people.
+Built by [sitemys.](https://sitemys.com), a web and systems studio in Malaysia. Product photos, look stills and the crew shot were generated with OpenAI's image model; the hero clips were made from the look stills with Google Flow (Veo). All of it is demo content, not real products or real people.
 
 ## License
 
