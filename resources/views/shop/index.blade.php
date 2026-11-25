@@ -211,7 +211,7 @@ function lookHero(looks) {
                 @php $pieces = collect($look['pins'])->unique('product'); @endphp
                 <article class="rounded-2xl border border-[#e3e0d9] bg-[#f5f4f1] overflow-hidden flex flex-col">
                     <div class="aspect-[4/5] overflow-hidden">
-                        <img src="{{ $look['poster'] }}" alt="{{ implode(' ', $look['lines']) }}" loading="lazy" class="w-full h-full object-cover object-[72%_50%]">
+                        <img src="{{ $look['card'] }}" alt="{{ implode(' ', $look['lines']) }}" loading="lazy" class="w-full h-full object-cover object-[74%_50%]">
                     </div>
                     <div class="p-5 flex-1 flex flex-col">
                         <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#5b636e]">{{ $look['eyebrow'] }}</p>
