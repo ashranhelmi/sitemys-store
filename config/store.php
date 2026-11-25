@@ -10,6 +10,13 @@ return [
     'shipping_flat'      => (float) env('STORE_SHIPPING_FLAT', 10),
     'free_shipping_over' => (float) env('STORE_FREE_SHIPPING_OVER', 150),
 
+    // Full-width crew band below the looks (set to null to hide it)
+    'crew' => [
+        'image'    => 'images/looks/crew.jpg',
+        'lines'    => ['Three corners.', 'One dot'],
+        'text'     => 'Drop 01 · Simpang. From the last train to the first kopi.',
+    ],
+
     /*
      | "Shop the look" hero. Each look = a short clip (poster = its first frame) plus hotspots. w / h = clip size.
      | 'card' = optional still for the "Shop the look" section (falls back to the poster).
