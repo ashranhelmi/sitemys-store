@@ -246,11 +246,11 @@ function lookHero(looks) {
 {{-- ── Crew band ──────────────────────────────────────────── --}}
 @php $crew = config('store.crew'); @endphp
 @if($crew && file_exists(public_path($crew['image'])))
-<section class="relative overflow-hidden bg-[#0b0d11] text-[#f2f4f7] flex flex-col lg:block lg:h-[clamp(420px,33.33vw,640px)]" aria-label="{{ implode(' ', $crew['lines']) }}">
+<section class="relative overflow-hidden bg-[#0b0d11] text-[#f2f4f7] flex flex-col lg:block lg:h-[clamp(440px,42.9vw,780px)]" aria-label="{{ implode(' ', $crew['lines']) }}">
     {{-- phones: copy first, photo below it (no text over faces); wider screens: copy over the open sky on the left --}}
     <div class="relative order-2 lg:order-none h-[420px] md:h-[520px] lg:h-auto lg:absolute lg:inset-0">
-        <img src="{{ asset($crew['image']) }}" alt="Three models from the Drop 01 looks on a rooftop car park in KL" loading="lazy"
-             class="absolute inset-0 w-full h-full object-cover object-[67%_50%] lg:object-[50%_50%]">
+        <img src="{{ asset($crew['image']) }}" alt="Three models from the Drop 01 looks under a KL five-foot-way at dusk" loading="lazy"
+             class="absolute inset-0 w-full h-full object-cover object-[67%_50%] lg:object-[60%_20%]">
         <div class="absolute inset-0 bg-gradient-to-b from-[#0b0d11] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#0b0d11]/75 lg:via-[#0b0d11]/20"></div>
     </div>
     <div class="relative order-1 lg:order-none lg:h-full max-w-6xl w-full mx-auto px-4 lg:px-6 pt-14 pb-6 lg:py-0 flex lg:items-center">
