@@ -57,8 +57,10 @@ export function AppSidebar({ ...props }) {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <a href="/dashboard">
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-display text-[15px] tracking-tight">
-                                    s<span className="inline-block size-[5px] rounded-full bg-[#FF4A3D] ml-px self-end mb-[9px]" />
+                                {/* sitemys. letter mark, no background square (DHelm, 25 Nov) */}
+                                <div className="flex aspect-square size-8 items-center justify-center">
+                                    <img src="/images/sitemys-s-mark-ink.svg" alt="" className="h-6 w-auto dark:hidden" />
+                                    <img src="/images/sitemys-s-mark-white.svg" alt="" className="h-6 w-auto hidden dark:block" />
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">Sitemys Store</span>
