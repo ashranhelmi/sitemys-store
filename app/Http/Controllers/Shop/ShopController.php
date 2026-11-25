@@ -28,6 +28,7 @@ class ShopController extends Controller
             $look['total']  = collect($look['pins'])->unique('product')->sum('price');
             $look['video']  = file_exists(public_path($look['video'])) ? asset($look['video']) : null;
             $look['poster'] = asset($look['poster']);
+            $look['closeup'] = isset($look['closeup']) && file_exists(public_path($look['closeup'])) ? asset($look['closeup']) : null;
             $look['card']   = isset($look['card']) && file_exists(public_path($look['card'])) ? asset($look['card']) : $look['poster'];
             return $look;
         })->filter(fn ($look) => count($look['pins']))->values();

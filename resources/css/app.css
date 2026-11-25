@@ -180,3 +180,7 @@
 .cat-dot { transform-box: fill-box; transform-origin: center; opacity: 0; animation: catDot .4s ease-out calc(var(--d, 0ms) + 500ms) forwards; }
 .cat-total { animation: catCard .6s ease-out .35s both; }
 @media (prefers-reduced-motion: reduce) { .cat-card, .cat-line, .cat-dot, .cat-total { animation: none; opacity: 1; stroke-dashoffset: 0; } }
+/* close-up beat after each hero clip: slow push-in */
+.hero-close { transform: scale(1.0); transition: opacity .7s ease, transform 4.2s ease-out; }
+.hero-close.is-on { transform: scale(1.06); }
+@media (prefers-reduced-motion: reduce) { .hero-close, .hero-close.is-on { transform: none; } }

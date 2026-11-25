@@ -26,6 +26,10 @@
                            class="absolute inset-0 w-full h-full object-cover" :style="`object-position:${posX * 100}% ${posY * 100}%`"
                            :data-look="i" @ended="ended()" x-on:error="look.video = null"></video>
                 </template>
+                <template x-if="look.closeup">
+                    <img :src="look.closeup" alt="" class="hero-close absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                         :class="i === current && phase === 'still' ? 'opacity-100 is-on' : 'opacity-0'" :style="`object-position:${posX * 100}% 30%`">
+                </template>
             </div>
         </template>
         {{-- readability scrims: left for the headline, bottom for the controls --}}
@@ -34,7 +38,7 @@
 
         {{-- phones / tablets: tap-dots with a small card --}}
         <template x-if="!catalog">
-            <div>
+            <div x-show="phase === 'video'" x-transition.opacity.duration.400ms>
             <template x-for="(pin, p) in pins" :key="looks[current].key + p">
                 <div class="absolute z-30 -translate-x-1/2 -translate-y-1/2" :style="`left:${pin.left}px;top:${pin.top}px`" x-show="pin.visible"
                      @mouseenter="open = p" @mouseleave="open = null">
@@ -61,7 +65,7 @@
         {{-- desktop: living catalog. Each piece floats beside the model; a dashed line runs from its card to the red dot on the garment. --}}
         <template x-if="catalog">
             <div class="absolute inset-0 z-30 pointer-events-none" :key="looks[current].key">
-                <div class="absolute inset-0" aria-hidden="true" x-html="linesSvg"></div>
+                <div class="absolute inset-0 transition-opacity duration-500" :class="phase === 'video' ? 'opacity-100' : 'opacity-0'" aria-hidden="true" x-html="linesSvg"></div>
                 <template x-for="(c, i) in cards" :key="looks[current].key + 'c' + i">
                     <a :href="c.pin.url" class="cat-card pointer-events-auto absolute flex items-center gap-3 w-[236px] rounded-2xl bg-white/92 backdrop-blur-md text-[#15171a] p-2 pr-3 shadow-[0_18px_40px_-18px_rgba(0,0,0,.6)] ring-1 ring-white/40 hover:bg-white transition"
                        :style="`left:${c.x}px;top:${c.y}px;--d:${i * 110}ms`">
@@ -133,7 +137,7 @@ function lookHero(looks) {
     return {
         looks, current: 0, progress: 0, open: null, pins: [], cards: [], linesSvg: '', catalog: false, stageW: 0,
         posX: 0.5, posY: 0.04, reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-        timer: null, started: 0, plays: 0, minSeconds: 7,
+        timer: null, started: 0, phase: 'video', stillMs: 3500, stillStart: 0,
         get uniquePins() { const seen = new Set(); return this.pins.filter(p => !seen.has(p.product) && seen.add(p.product)); },
         init() { this.layout(); this.$nextTick(() => this.play()); requestAnimationFrame(() => this.tick()); },
         layout() {
@@ -177,19 +181,26 @@ function lookHero(looks) {
             });
         },
         video() { return this.$root.querySelector(`video[data-look="${this.current}"]`); },
-        // short clips repeat until they have shown for about minSeconds
-        rounds(v) { return v && v.duration ? Math.max(1, Math.ceil(this.minSeconds / v.duration)) : 1; },
-        ended() { const v = this.video(); this.plays++; if (this.plays < this.rounds(v)) { v.currentTime = 0; v.play().catch(() => this.next()); } else this.next(); },
+        // each look: its clip once, then (if set) a close-up still with a slow push-in, then the next look
+        ended() {
+            if (!this.looks[this.current].closeup) return this.next();
+            this.phase = 'still'; this.stillStart = performance.now();
+            clearTimeout(this.timer); this.timer = setTimeout(() => this.next(), this.stillMs);
+        },
         play() {
-            this.plays = 0;
+            this.phase = 'video';
             this.started = performance.now(); clearTimeout(this.timer);
             const v = this.video();
             if (v) { v.currentTime = 0; v.play().catch(() => this.fallback()); } else this.fallback();
         },
-        fallback() { clearTimeout(this.timer); this.timer = setTimeout(() => this.next(), 6000); },
+        fallback() { clearTimeout(this.timer); this.timer = setTimeout(() => this.ended(), 6000); },
         tick() {
             const v = this.video();
-            this.progress = v && v.duration ? (this.plays + v.currentTime / v.duration) / this.rounds(v) : Math.min(1, (performance.now() - this.started) / 6000);
+            const still = this.looks[this.current].closeup ? this.stillMs / 1000 : 0;
+            if (v && v.duration) {
+                const total = v.duration + still;
+                this.progress = this.phase === 'still' ? Math.min(1, (v.duration + (performance.now() - this.stillStart) / 1000) / total) : v.currentTime / total;
+            } else this.progress = Math.min(1, (performance.now() - this.started) / 6000);
             requestAnimationFrame(() => this.tick());
         },
         go(i) { this.$root.querySelectorAll('video').forEach(v => v.pause()); this.current = i; this.open = null; this.layout(); this.$nextTick(() => this.play()); },

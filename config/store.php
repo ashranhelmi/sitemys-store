@@ -18,14 +18,14 @@ return [
     ],
 
     /*
-     | "Shop the look" hero. Each look = a short clip (poster = its first frame) plus hotspots. Clips made in Google Flow (Veo) from the low-angle stills; short clips play twice. w / h = clip size.
+     | "Shop the look" hero. Each look = a short clip (poster = its first frame) plus hotspots. Clips made in Google Flow (Veo) from the low-angle stills. Each clip plays once, then 'closeup' (optional) holds for a few seconds before the next look. w / h = clip size.
      | 'card' = optional still for the "Shop the look" section (falls back to the poster).
      | x / y are fractions of the source image (0–1), so pins stay on the garment at any crop.
      */
     'looks' => [
         [
             'key' => 'lrt', 'eyebrow' => 'Look 01 · LRT, blue hour', 'lines' => ['Dressed for', 'the last train'],
-            'video' => 'videos/look-lrt.mp4', 'poster' => 'images/looks/look-lrt.jpg', 'card' => 'images/looks/lowangle-lrt.jpg', 'w' => 1920, 'h' => 1080,
+            'video' => 'videos/look-lrt.mp4', 'poster' => 'images/looks/look-lrt.jpg', 'card' => 'images/looks/lowangle-lrt.jpg', 'closeup' => 'images/looks/close-lrt.jpg', 'w' => 1920, 'h' => 1080,
             'pins' => [
                 ['product' => 'dot-6-panel-cap-ink', 'x' => 0.761, 'y' => 0.042],
                 ['product' => 'dot-heavyweight-tee-ink', 'x' => 0.772, 'y' => 0.222],
@@ -35,7 +35,7 @@ return [
         ],
         [
             'key' => 'monsoon', 'eyebrow' => 'Look 02 · Monsoon, 5pm', 'lines' => ['Built for', 'the monsoon'],
-            'video' => 'videos/look-monsoon.mp4', 'poster' => 'images/looks/look-monsoon.jpg', 'card' => 'images/looks/lowangle-monsoon.jpg', 'w' => 1920, 'h' => 1080,
+            'video' => 'videos/look-monsoon.mp4', 'poster' => 'images/looks/look-monsoon.jpg', 'card' => 'images/looks/lowangle-monsoon.jpg', 'closeup' => 'images/looks/close-monsoon.jpg', 'w' => 1920, 'h' => 1080,
             'pins' => [
                 ['product' => 'ribbed-beanie-bone', 'x' => 0.691, 'y' => 0.042],
                 ['product' => 'monsoon-windbreaker-brick', 'x' => 0.746, 'y' => 0.224],
@@ -44,7 +44,7 @@ return [
         ],
         [
             'key' => 'kopitiam', 'eyebrow' => 'Look 03 · Kopitiam, 10am', 'lines' => ['Kopi first,', 'then the city'],
-            'video' => 'videos/look-kopitiam.mp4', 'poster' => 'images/looks/look-kopitiam.jpg', 'card' => 'images/looks/lowangle-kopitiam.jpg', 'w' => 1920, 'h' => 1080,
+            'video' => 'videos/look-kopitiam.mp4', 'poster' => 'images/looks/look-kopitiam.jpg', 'card' => 'images/looks/lowangle-kopitiam.jpg', 'closeup' => 'images/looks/close-kopitiam.jpg', 'w' => 1920, 'h' => 1080,
             'pins' => [
                 ['product' => 'dot-6-panel-cap-ink', 'x' => 0.750, 'y' => 0.048],
                 ['product' => 'simpang-boxy-hoodie-ash', 'x' => 0.781, 'y' => 0.230],
