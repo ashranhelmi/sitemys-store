@@ -24,7 +24,7 @@
                 <template x-if="look.video && !reduced">
                     <video :src="look.video" :poster="look.poster" muted playsinline preload="auto"
                            class="absolute inset-0 w-full h-full object-cover" :style="`object-position:${posX * 100}% ${posY * 100}%`"
-                           :data-look="i" @ended="next()" x-on:error="look.video = null"></video>
+                           :data-look="i" @ended="ended()" x-on:error="look.video = null"></video>
                 </template>
             </div>
         </template>
@@ -108,7 +108,7 @@ function lookHero(looks) {
     return {
         looks, current: 0, progress: 0, open: null, pins: [], stageW: 0,
         posX: 0.5, posY: 0.04, reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-        timer: null, started: 0,
+        timer: null, started: 0, plays: 0, minSeconds: 7,
         get uniquePins() { const seen = new Set(); return this.pins.filter(p => !seen.has(p.product) && seen.add(p.product)); },
         init() { this.layout(); this.$nextTick(() => this.play()); requestAnimationFrame(() => this.tick()); },
         layout() {
@@ -126,7 +126,11 @@ function lookHero(looks) {
             });
         },
         video() { return this.$root.querySelector(`video[data-look="${this.current}"]`); },
+        // short clips repeat until they have shown for about minSeconds
+        rounds(v) { return v && v.duration ? Math.max(1, Math.ceil(this.minSeconds / v.duration)) : 1; },
+        ended() { const v = this.video(); this.plays++; if (this.plays < this.rounds(v)) { v.currentTime = 0; v.play().catch(() => this.next()); } else this.next(); },
         play() {
+            this.plays = 0;
             this.started = performance.now(); clearTimeout(this.timer);
             const v = this.video();
             if (v) { v.currentTime = 0; v.play().catch(() => this.fallback()); } else this.fallback();
@@ -134,7 +138,7 @@ function lookHero(looks) {
         fallback() { clearTimeout(this.timer); this.timer = setTimeout(() => this.next(), 6000); },
         tick() {
             const v = this.video();
-            this.progress = v && v.duration ? v.currentTime / v.duration : Math.min(1, (performance.now() - this.started) / 6000);
+            this.progress = v && v.duration ? (this.plays + v.currentTime / v.duration) / this.rounds(v) : Math.min(1, (performance.now() - this.started) / 6000);
             requestAnimationFrame(() => this.tick());
         },
         go(i) { this.$root.querySelectorAll('video').forEach(v => v.pause()); this.current = i; this.open = null; this.layout(); this.$nextTick(() => this.play()); },
