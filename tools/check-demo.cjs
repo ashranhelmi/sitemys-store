@@ -42,6 +42,21 @@ async function buy(page, size) {
 
 (async () => {
   const before = hash();
+  // Outside interference: bots without our cookie must not create copies or reach the gateway addresses.
+  const copies = () => fs.existsSync('storage/app/demo-sessions') ? fs.readdirSync('storage/app/demo-sessions').length : -1;
+  const local = !process.env.STORE_DEMO_URL;
+  const c0 = copies();
+  for (const path of ['/', '/shop/dot-heavyweight-tee-ink', '/cart', '/login', '/demo/as/admin']) {
+    const r = await fetch(base + path, { redirect: 'manual' });
+    assert(r.status < 400, `cookie-less GET ${path} → ${r.status}`);
+  }
+  if (local) assert.equal(copies(), c0, 'cookie-less browsing created a copy');
+  assert.equal((await fetch(base + '/cart/add', { method: 'POST', body: 'product_id=1&size=M&quantity=1', headers: { 'content-type': 'application/x-www-form-urlencoded' } })).status, 419, 'cookie-less POST refused');
+  assert.equal((await fetch(base + '/webhook/billplz', { method: 'POST', body: 'id=x', headers: { 'content-type': 'application/x-www-form-urlencoded' } })).status, 404, 'webhook closed');
+  assert.equal((await fetch(base + '/payment/callback?billplz[id]=x', { redirect: 'manual' })).status, 404, 'callback closed');
+  if (local) assert.equal(copies(), c0, 'refused requests created a copy');
+  ok('outside requests: browsing makes no copy, cookie-less actions refused (419), Billplz addresses closed (404)');
+
   const browser = await chromium.launch({ headless: true });
   const desk = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
