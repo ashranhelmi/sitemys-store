@@ -58,7 +58,19 @@ export default function OrderShow({ order }) {
                     <Card>
                         <CardHeader><CardTitle>Items</CardTitle></CardHeader>
                         <CardContent className="p-0">
-                            <table className="w-full text-sm">
+                            {/* Phones: one line per item */}
+                            <ul className="sm:hidden divide-y divide-border border-b">
+                                {order.items.map(item => (
+                                    <li key={item.id} className="p-4 text-sm">
+                                        <p className="font-medium">{item.product_name}</p>
+                                        <div className="mt-1 flex justify-between gap-3">
+                                            <span className="text-muted-foreground">Size {item.size ?? '—'} · Qty {item.quantity}</span>
+                                            <span className="shrink-0">RM {parseFloat(item.subtotal).toFixed(2)}</span>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                            <table className="hidden sm:table w-full text-sm">
                                 <thead className="border-b">
                                     <tr className="text-muted-foreground text-xs uppercase tracking-wider">
                                         <th className="text-left p-4">Product</th>

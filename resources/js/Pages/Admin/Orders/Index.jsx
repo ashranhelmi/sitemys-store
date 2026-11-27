@@ -37,12 +37,13 @@ export default function OrdersIndex({ orders }) {
             </div>
 
             {/* Status filter tabs */}
-            <div className="flex gap-1 flex-wrap mb-4">
+            {/* Phones (sidebar hidden): one row that scrolls sideways. From 768 the sidebar is open, a nowrap row would widen the page, so wrap */}
+            <div className="flex gap-1 mb-4 overflow-x-auto pb-1 -mx-1 px-1 md:flex-wrap md:overflow-visible">
                 {FILTERS.map(f => (
                     <button
                         key={f}
                         onClick={() => setActiveFilter(f)}
-                        className={`px-3 py-1 rounded-md text-xs capitalize transition ${
+                        className={`shrink-0 whitespace-nowrap px-3 py-1 rounded-md text-xs capitalize transition ${
                             activeFilter === f
                                 ? 'bg-foreground text-background font-semibold'
                                 : 'text-muted-foreground hover:text-foreground hover:bg-muted'
@@ -57,8 +58,27 @@ export default function OrdersIndex({ orders }) {
                 <CardContent className="p-0">
                     {filtered.length === 0 ? (
                         <p className="text-sm text-muted-foreground p-6">No orders in this category.</p>
-                    ) : (
-                        <table className="w-full text-sm">
+                    ) : (<>
+                        {/* Phones, tablets and small laptops (below 1280): one card per order */}
+                        <ul className="xl:hidden divide-y divide-border">
+                            {filtered.map(order => (
+                                <li key={order.id}>
+                                    <Link href={route('admin.orders.show', order.id)} className="block p-4 hover:bg-muted/30 transition">
+                                        <div className="flex items-center justify-between gap-3">
+                                            <span className="font-mono font-medium text-sm truncate">{order.order_number}</span>
+                                            <Badge variant={statusVariant[order.status] ?? 'secondary'} className="capitalize shrink-0">{order.status}</Badge>
+                                        </div>
+                                        <p className="mt-2 text-sm">{order.customer_name}</p>
+                                        <p className="text-xs text-muted-foreground break-all">{order.customer_email}</p>
+                                        <div className="mt-2 flex items-end justify-between gap-3 text-sm">
+                                            <span className="text-xs text-muted-foreground">{order.created_at} · {order.items_count} {order.items_count === 1 ? 'item' : 'items'}</span>
+                                            <span className="font-semibold shrink-0">RM {parseFloat(order.total).toFixed(2)}</span>
+                                        </div>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                        <table className="hidden xl:table w-full text-sm">
                             <thead className="border-b">
                                 <tr className="text-muted-foreground text-xs uppercase tracking-wider">
                                     <th className="text-left p-4">Order</th>
@@ -95,7 +115,7 @@ export default function OrdersIndex({ orders }) {
                                 ))}
                             </tbody>
                         </table>
-                    )}
+                    </>)}
                 </CardContent>
             </Card>
         </AppLayout>

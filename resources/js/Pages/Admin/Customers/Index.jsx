@@ -10,8 +10,21 @@ export default function CustomersIndex({ customers }) {
                 <CardContent className="p-0">
                     {customers.length === 0 ? (
                         <p className="text-sm text-muted-foreground p-6">No customers yet.</p>
-                    ) : (
-                        <table className="w-full text-sm">
+                    ) : (<>
+                        {/* Phones, tablets and small laptops (below 1280): one card per customer */}
+                        <ul className="xl:hidden divide-y divide-border">
+                            {customers.map(customer => (
+                                <li key={customer.id} className="p-4 text-sm">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <p className="font-medium min-w-0">{customer.name}</p>
+                                        <span className="shrink-0">{customer.orders_count} {customer.orders_count === 1 ? 'order' : 'orders'}</span>
+                                    </div>
+                                    <p className="text-muted-foreground break-all">{customer.email}</p>
+                                    <p className="mt-2 text-xs text-muted-foreground">Last order {customer.last_order ?? '—'} · Joined {customer.joined}</p>
+                                </li>
+                            ))}
+                        </ul>
+                        <table className="hidden xl:table w-full text-sm">
                             <thead className="border-b">
                                 <tr className="text-muted-foreground text-xs uppercase tracking-wider">
                                     <th className="text-left p-4">Name</th>
@@ -33,7 +46,7 @@ export default function CustomersIndex({ customers }) {
                                 ))}
                             </tbody>
                         </table>
-                    )}
+                    </>)}
                 </CardContent>
             </Card>
         </AppLayout>
