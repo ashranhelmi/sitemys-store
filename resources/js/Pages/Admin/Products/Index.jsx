@@ -105,8 +105,35 @@ export default function ProductsIndex({ products }) {
                 <CardContent className="p-0">
                     {products.length === 0 ? (
                         <p className="text-sm text-muted-foreground p-6">No products yet. Add your first product.</p>
-                    ) : (
-                        <table className="w-full text-sm">
+                    ) : (<>
+                        {/* Phones, tablets and small laptops (below 1280): one card per product */}
+                        <ul className="xl:hidden divide-y divide-border">
+                            {products.map(product => (
+                                <li key={product.id} className="p-4">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="min-w-0">
+                                            <p className="font-medium text-sm">{product.name}</p>
+                                            <p className="mt-1 text-sm">RM {parseFloat(product.price).toFixed(2)} <span className="text-muted-foreground">· {product.stock} in stock</span></p>
+                                        </div>
+                                        <Badge variant={product.is_active ? 'default' : 'secondary'} className="shrink-0">{product.is_active ? 'Active' : 'Hidden'}</Badge>
+                                    </div>
+                                    <div className="mt-3 flex items-center justify-between gap-3">
+                                        <div className="flex flex-wrap gap-1">
+                                            {(product.sizes ?? []).map(s => <Badge key={s} variant="outline" className="text-xs">{s}</Badge>)}
+                                        </div>
+                                        <div className="flex gap-1 shrink-0">
+                                            <Button size="icon" variant="ghost" aria-label={`Edit ${product.name}`} onClick={() => { setEditing(product); setOpen(true); }}>
+                                                <Pencil className="size-4" />
+                                            </Button>
+                                            <Button size="icon" variant="ghost" aria-label={`Delete ${product.name}`} className="text-destructive hover:text-destructive" onClick={() => handleDelete(product)}>
+                                                <Trash2 className="size-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                        <table className="hidden xl:table w-full text-sm">
                             <thead className="border-b">
                                 <tr className="text-muted-foreground text-xs uppercase tracking-wider">
                                     <th className="text-left p-4">Product</th>
@@ -147,7 +174,7 @@ export default function ProductsIndex({ products }) {
                                 ))}
                             </tbody>
                         </table>
-                    )}
+                    </>)}
                 </CardContent>
             </Card>
 

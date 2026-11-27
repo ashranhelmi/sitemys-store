@@ -13,8 +13,24 @@ export default function PaymentsIndex({ payments }) {
                 <CardContent className="p-0">
                     {payments.length === 0 ? (
                         <p className="text-sm text-muted-foreground p-6">No payments yet.</p>
-                    ) : (
-                        <table className="w-full text-sm">
+                    ) : (<>
+                        {/* Phones, tablets and small laptops (below 1280): one card per payment */}
+                        <ul className="xl:hidden divide-y divide-border">
+                            {payments.map(payment => (
+                                <li key={payment.id} className="p-4 text-sm">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <span className="font-mono font-medium truncate">{payment.order_number}</span>
+                                        <Badge variant={statusVariant[payment.status] ?? 'secondary'} className="capitalize shrink-0">{payment.status}</Badge>
+                                    </div>
+                                    <div className="mt-2 flex items-start justify-between gap-3">
+                                        <span className="min-w-0">{payment.customer_name}</span>
+                                        <span className="font-semibold shrink-0">RM {parseFloat(payment.amount).toFixed(2)}</span>
+                                    </div>
+                                    <p className="mt-1 text-xs text-muted-foreground break-all">Bill <span className="font-mono">{payment.billplz_bill_id}</span> · Paid {payment.paid_at ?? '—'}</p>
+                                </li>
+                            ))}
+                        </ul>
+                        <table className="hidden xl:table w-full text-sm">
                             <thead className="border-b">
                                 <tr className="text-muted-foreground text-xs uppercase tracking-wider">
                                     <th className="text-left p-4">Bill ID</th>
@@ -42,7 +58,7 @@ export default function PaymentsIndex({ payments }) {
                                 ))}
                             </tbody>
                         </table>
-                    )}
+                    </>)}
                 </CardContent>
             </Card>
         </AppLayout>
