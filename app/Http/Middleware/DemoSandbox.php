@@ -52,7 +52,9 @@ class DemoSandbox
         config([
             'database.default' => 'sqlite',
             'database.connections.sqlite.database' => $database,
-            'mail.default' => 'log',
+            // Demo: emails are built and thrown away (array mailer). Nothing is sent or written to disk,
+            // so an address a visitor types at checkout never leaves their private copy.
+            'mail.default' => 'array',
         ]);
         DB::purge('sqlite');
 
