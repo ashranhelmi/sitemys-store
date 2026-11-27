@@ -59,7 +59,7 @@ export function AppSidebar({ ...props }) {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <a href={route("dashboard")}>
-                                {/* sitemys. letter mark, no background square (DHelm, 25 Nov) */}
+                                {/* sitemys. letter mark, no background square */}
                                 <div className="flex aspect-square size-8 items-center justify-center">
                                     <img src={asset("images/sitemys-s-mark-ink.svg")} alt="" className="h-6 w-auto dark:hidden" />
                                     <img src={asset("images/sitemys-s-mark-white.svg")} alt="" className="h-6 w-auto hidden dark:block" />
