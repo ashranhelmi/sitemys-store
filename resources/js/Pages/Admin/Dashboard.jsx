@@ -335,7 +335,7 @@ export default function Dashboard({ stats, recent_orders, recent_payments, top_p
     ];
 
     return (
-        <AppLayout title="Dashboard" breadcrumbs={[{ label: "Dashboard", url: "/dashboard" }]}>
+        <AppLayout title="Dashboard" breadcrumbs={[{ label: "Dashboard", url: route('dashboard') }]}>
             {/* Stat cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
                 {statCards.map((card) => (

@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function CustomersIndex({ customers }) {
     return (
-        <AppLayout title="Customers" breadcrumbs={[{ label: "Dashboard", url: "/dashboard" }, { label: "Customers" }]}>
+        <AppLayout title="Customers" breadcrumbs={[{ label: "Dashboard", url: route('dashboard') }, { label: "Customers" }]}>
             <h1 className="text-xl font-semibold mb-6">Customers</h1>
 
             <Card>

@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // The visitor's private demo database must be selected right after the session starts, before auth and
+        // route model binding read anything (same lesson as the property demo, 18 Nov).
+        $middleware->appendToPriorityList(\Illuminate\Session\Middleware\StartSession::class, \App\Http\Middleware\DemoSandbox::class);
         $middleware->web(append: [
+            \App\Http\Middleware\DemoSandbox::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);

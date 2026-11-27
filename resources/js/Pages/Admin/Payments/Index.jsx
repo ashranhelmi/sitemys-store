@@ -6,7 +6,7 @@ const statusVariant = { pending: 'warning', paid: 'success', failed: 'destructiv
 
 export default function PaymentsIndex({ payments }) {
     return (
-        <AppLayout title="Payments" breadcrumbs={[{ label: "Dashboard", url: "/dashboard" }, { label: "Payments" }]}>
+        <AppLayout title="Payments" breadcrumbs={[{ label: "Dashboard", url: route('dashboard') }, { label: "Payments" }]}>
             <h1 className="text-xl font-semibold mb-6">Payments</h1>
 
             <Card>

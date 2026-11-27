@@ -92,6 +92,17 @@
             <p class="text-sm text-[#5b636e]">{{ $order->city }}, {{ $order->state }} {{ $order->postcode }}</p>
         </div>
 
+        @if(config('demo.enabled'))
+            <div class="bg-[#15171a] text-white rounded-xl px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <p class="font-semibold">Now see it from the shop's side</p>
+                    <p class="text-sm text-white/70 mt-1">Your order is waiting in the admin. Move it to packed and shipped.</p>
+                </div>
+                <a href="{{ route('demo.as', ['role' => 'admin', 'screen' => 'orders', 'order' => $order->id]) }}"
+                   class="shrink-0 inline-block bg-white text-[#15171a] font-semibold px-5 py-3 text-sm rounded-lg hover:bg-[#f5f4f1] transition">Open in admin</a>
+            </div>
+        @endif
+
         <div class="text-center pt-4">
             <a href="{{ route('shop.index') }}"
                class="inline-block bg-[#15171a] hover:bg-[#333] text-white font-semibold px-10 py-4 uppercase tracking-wider text-sm transition rounded-lg">

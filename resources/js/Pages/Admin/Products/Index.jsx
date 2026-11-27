@@ -93,7 +93,7 @@ export default function ProductsIndex({ products }) {
     };
 
     return (
-        <AppLayout title="Products" breadcrumbs={[{ label: "Dashboard", url: "/dashboard" }, { label: "Products" }]}>
+        <AppLayout title="Products" breadcrumbs={[{ label: "Dashboard", url: route('dashboard') }, { label: "Products" }]}>
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-xl font-semibold">Products</h1>
                 <Button onClick={() => { setEditing(null); setOpen(true); }}>

@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
 import Wordmark from '@/Components/Wordmark';
+import { asset } from '@/lib/utils';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -101,14 +102,14 @@ export default function Login({ status, canResetPassword }) {
                         </Button>
 
                         <p className="text-center text-sm text-muted-foreground">
-                            <a href="/" className="text-foreground font-medium underline underline-offset-4 hover:opacity-80">Back to the store</a>
+                            <a href={route('home')} className="text-foreground font-medium underline underline-offset-4 hover:opacity-80">Back to the store</a>
                         </p>
                     </form>
 
                     {/* Right — image */}
                     <div className="relative hidden bg-muted md:block">
                         <img
-                            src="/images/looks/look-monsoon.jpg"
+                            src={asset("images/looks/look-monsoon.jpg")}
                             alt="Look 02, Monsoon"
                             className="absolute inset-0 h-full w-full object-cover object-[74%_50%] dark:brightness-75"
                         />

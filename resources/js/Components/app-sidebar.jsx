@@ -7,6 +7,7 @@ import {
     CreditCard,
 } from "lucide-react"
 import { NavMain } from "@/components/nav-main"
+import { asset } from "@/lib/utils"
 import { NavUser } from "@/components/nav-user"
 import {
     Sidebar,
@@ -23,27 +24,28 @@ const data = {
     navMain: [
         {
             title: "Dashboard",
-            url: "/dashboard",
+            url: route("dashboard"),
+            exact: true,
             icon: LayoutDashboard,
         },
         {
             title: "Orders",
-            url: "/dashboard/admin/orders",
+            url: route("admin.orders.index"),
             icon: Package,
         },
         {
             title: "Products",
-            url: "/dashboard/admin/products",
+            url: route("admin.products.index"),
             icon: ShoppingBag,
         },
         {
             title: "Customers",
-            url: "/dashboard/admin/customers",
+            url: route("admin.customers.index"),
             icon: Users,
         },
         {
             title: "Payments",
-            url: "/dashboard/admin/payments",
+            url: route("admin.payments.index"),
             icon: CreditCard,
         },
     ],
@@ -56,11 +58,11 @@ export function AppSidebar({ ...props }) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <a href="/dashboard">
+                            <a href={route("dashboard")}>
                                 {/* sitemys. letter mark, no background square (DHelm, 25 Nov) */}
                                 <div className="flex aspect-square size-8 items-center justify-center">
-                                    <img src="/images/sitemys-s-mark-ink.svg" alt="" className="h-6 w-auto dark:hidden" />
-                                    <img src="/images/sitemys-s-mark-white.svg" alt="" className="h-6 w-auto hidden dark:block" />
+                                    <img src={asset("images/sitemys-s-mark-ink.svg")} alt="" className="h-6 w-auto dark:hidden" />
+                                    <img src={asset("images/sitemys-s-mark-white.svg")} alt="" className="h-6 w-auto hidden dark:block" />
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">Sitemys Store</span>

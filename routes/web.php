@@ -64,4 +64,15 @@ Route::view('/return-policy', 'legal.return-policy')->name('legal.returns');
 Route::post('/webhook/billplz', [BillplzController::class, 'webhook'])->name('billplz.webhook');
 Route::get('/payment/callback', [BillplzController::class, 'callback'])->name('billplz.callback');
 
+// ─── Public demo (DEMO_MODE=true only) ──────────────────────
+if (config('demo.enabled')) {
+    Route::prefix('demo')->name('demo.')->group(function () {
+        Route::post('enter', [\App\Http\Controllers\DemoController::class, 'enter'])->name('enter');
+        Route::get('as/{role}', [\App\Http\Controllers\DemoController::class, 'as'])->name('as');
+        Route::post('reset', [\App\Http\Controllers\DemoController::class, 'reset'])->name('reset');
+        Route::get('pay/{order}', [\App\Http\Controllers\DemoController::class, 'pay'])->middleware('signed')->name('pay');
+        Route::post('pay/{order}', [\App\Http\Controllers\DemoController::class, 'finish'])->middleware('signed')->name('pay.finish');
+    });
+}
+
 require __DIR__.'/auth.php';

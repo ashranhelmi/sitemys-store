@@ -23,8 +23,8 @@ class BillplzController extends Controller
 
     public function __construct()
     {
-        $this->apiKey       = config('services.billplz.api_key', '');
-        $this->collectionId = config('services.billplz.collection_id', '');
+        $this->apiKey       = (string) config('services.billplz.api_key');
+        $this->collectionId = (string) config('services.billplz.collection_id');
         $this->baseUrl      = config('services.billplz.sandbox', true)
             ? 'https://www.billplz-sandbox.com/api/v3'
             : 'https://www.billplz.com/api/v3';
@@ -32,6 +32,19 @@ class BillplzController extends Controller
 
     public function createBill(Order $order)
     {
+        // Public demo: no gateway. A demo bill points at our own "choose the outcome" page instead of Billplz.
+        if (config('demo.enabled')) {
+            $billId = 'demo-' . bin2hex(random_bytes(6));
+            $order->update(['billplz_bill_id' => $billId]);
+            Payment::updateOrCreate(
+                ['order_id' => $order->id],
+                ['billplz_bill_id' => $billId, 'amount' => $order->total, 'status' => 'pending', 'billplz_data' => ['id' => $billId, 'demo' => true]]
+            );
+            session()->forget('cart');
+
+            return redirect(\Illuminate\Support\Facades\URL::signedRoute('demo.pay', $order));
+        }
+
         $amountCents = (int) ($order->total * 100);
 
         $response = Http::withBasicAuth($this->apiKey, '')
@@ -138,6 +151,29 @@ class BillplzController extends Controller
         $this->markPaidIfVerified($payment, $bill);
 
         return response('OK', 200);
+    }
+
+    /** Demo only: the visitor chose "Pay" on the demo payment page. Same paid path as a verified Billplz bill. */
+    public function settleDemoPayment(Payment $payment): bool
+    {
+        abort_unless(config('demo.enabled') && str_starts_with((string) $payment->billplz_bill_id, 'demo-'), 404);
+
+        return $this->markPaidIfVerified($payment, [
+            'id'          => $payment->billplz_bill_id,
+            'paid'        => true,
+            'paid_amount' => (int) round($payment->amount * 100),
+            'paid_at'     => now()->toIso8601String(),
+            'demo'        => true,
+        ]);
+    }
+
+    public function sendPaymentFailed(Order $order): void
+    {
+        try {
+            Mail::to($order->customer_email)->send(new PaymentFailed($order));
+        } catch (\Exception $e) {
+            Log::error('Failed to send payment failed email', ['error' => $e->getMessage()]);
+        }
     }
 
     /** GET /bills/{id} from Billplz with our API key. Null when it can't be read. */

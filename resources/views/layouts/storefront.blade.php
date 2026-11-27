@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('store.name'))</title>
     <meta name="description" content="@yield('description', config('store.tagline'))">
@@ -16,6 +16,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
 </head>
 <body class="storefront bg-[#f5f4f1] text-[#15171a] antialiased" x-data="{ cartOpen: false }">
+    @if(config('demo.enabled')) @include('demo.bar') @endif
 
     {{-- Nav --}}
     <nav class="fixed top-0 left-0 right-0 z-50 border-b border-[#e3e0d9] bg-[#f5f4f1]/90 backdrop-blur-md">

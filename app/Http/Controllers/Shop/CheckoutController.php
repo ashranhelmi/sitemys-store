@@ -49,7 +49,7 @@ class CheckoutController extends Controller
         }
 
         // A fresh clone has no payment keys yet: say so before creating an order that can't be paid.
-        if (!config('services.billplz.api_key') || !config('services.billplz.collection_id')) {
+        if (!config('demo.enabled') && (!config('services.billplz.api_key') || !config('services.billplz.collection_id'))) {
             return back()->withInput()->with('error', 'Payments are not connected yet. Add your Billplz sandbox keys to .env (see the README).');
         }
 

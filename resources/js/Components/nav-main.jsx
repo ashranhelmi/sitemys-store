@@ -19,9 +19,13 @@ import {
 export function NavMain({ items }) {
     const { url } = usePage()
 
-    const isActive = (itemUrl) => {
+    // Item URLs come from route() (absolute, subfolder-safe); compare paths only.
+    const path = (u) => new URL(u, window.location.origin).pathname.replace(/\/$/, '')
+    const isActive = (itemUrl, exact = false) => {
         if (itemUrl === '#') return false
-        return url.startsWith(itemUrl)
+        const current = path(url)
+        const target = path(itemUrl)
+        return exact ? current === target : current === target || current.startsWith(target + '/')
     }
 
     const isGroupActive = (item) => {
@@ -72,7 +76,7 @@ export function NavMain({ items }) {
                             <SidebarMenuButton
                                 asChild
                                 tooltip={item.title}
-                                isActive={isActive(item.url)}>
+                                isActive={isActive(item.url, item.exact)}>
                                 <Link href={item.url}>
                                     {item.icon && <item.icon />}
                                     <span>{item.title}</span>

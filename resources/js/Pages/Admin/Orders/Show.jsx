@@ -38,7 +38,7 @@ export default function OrderShow({ order }) {
 
     return (
         <AppLayout title={order.order_number} breadcrumbs={[
-            { label: "Dashboard", url: "/dashboard" },
+            { label: "Dashboard", url: route('dashboard') },
             { label: "Orders", url: route('admin.orders.index') },
             { label: order.order_number },
         ]}>

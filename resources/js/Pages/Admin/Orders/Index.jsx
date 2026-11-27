@@ -30,7 +30,7 @@ export default function OrdersIndex({ orders }) {
         : orders.filter(o => o.status === activeFilter);
 
     return (
-        <AppLayout title="Orders" breadcrumbs={[{ label: "Dashboard", url: "/dashboard" }, { label: "Orders" }]}>
+        <AppLayout title="Orders" breadcrumbs={[{ label: "Dashboard", url: route('dashboard') }, { label: "Orders" }]}>
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-xl font-semibold">Orders</h1>
                 <p className="text-sm text-muted-foreground">{filtered.length} orders</p>

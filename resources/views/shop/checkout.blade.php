@@ -18,6 +18,14 @@
         <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form" class="space-y-8"
               x-data @submit="$dispatch('checkout-submitting')">
             @csrf
+            @php
+                // Demo: fictional sample details so a visitor can check out in one tap. Change anything.
+                $d = config('demo.enabled') ? ['name' => 'Aina Rahman', 'email' => 'aina@example.com', 'phone' => '012-345 6789',
+                    'address' => 'No. 12, Jalan Contoh 3', 'city' => 'Kuala Lumpur', 'postcode' => '50000', 'state' => 'Kuala Lumpur'] : [];
+            @endphp
+            @if($d)
+                <p class="text-sm text-[#5b636e] bg-white border border-[#e3e0d9] rounded-xl px-4 py-3">Demo: sample details are filled in. Change anything you like. No real payment is taken.</p>
+            @endif
 
             {{-- Customer info --}}
             <div>
@@ -30,20 +38,20 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-[#5b636e] mb-1.5 uppercase tracking-wider">Full Name</label>
-                        <input type="text" name="name" value="{{ old('name') }}" required placeholder="Muhammad Ali"
+                        <input type="text" name="name" value="{{ old('name', $d['name'] ?? '') }}" required placeholder="Muhammad Ali"
                                class="w-full bg-white border border-[#e3e0d9] rounded-lg px-4 py-3 text-sm text-[#15171a] placeholder-[#a9a49b] focus:outline-none focus:border-[#0a84c6] transition">
                         @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-[#5b636e] mb-1.5 uppercase tracking-wider">Email</label>
-                            <input type="email" name="email" value="{{ old('email') }}" required placeholder="you@email.com"
+                            <input type="email" name="email" value="{{ old('email', $d['email'] ?? '') }}" required placeholder="you@email.com"
                                    class="w-full bg-white border border-[#e3e0d9] rounded-lg px-4 py-3 text-sm text-[#15171a] placeholder-[#a9a49b] focus:outline-none focus:border-[#0a84c6] transition">
                             @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-[#5b636e] mb-1.5 uppercase tracking-wider">Phone</label>
-                            <input type="text" name="phone" value="{{ old('phone') }}" required placeholder="01X-XXXXXXX"
+                            <input type="text" name="phone" value="{{ old('phone', $d['phone'] ?? '') }}" required placeholder="01X-XXXXXXX"
                                    class="w-full bg-white border border-[#e3e0d9] rounded-lg px-4 py-3 text-sm text-[#15171a] placeholder-[#a9a49b] focus:outline-none focus:border-[#0a84c6] transition">
                             @error('phone') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
@@ -62,20 +70,20 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-[#5b636e] mb-1.5 uppercase tracking-wider">Street Address</label>
-                        <input type="text" name="address" value="{{ old('address') }}" required placeholder="No. 12, Jalan..."
+                        <input type="text" name="address" value="{{ old('address', $d['address'] ?? '') }}" required placeholder="No. 12, Jalan..."
                                class="w-full bg-white border border-[#e3e0d9] rounded-lg px-4 py-3 text-sm text-[#15171a] placeholder-[#a9a49b] focus:outline-none focus:border-[#0a84c6] transition">
                         @error('address') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-[#5b636e] mb-1.5 uppercase tracking-wider">City</label>
-                            <input type="text" name="city" value="{{ old('city') }}" required placeholder="Kuala Lumpur"
+                            <input type="text" name="city" value="{{ old('city', $d['city'] ?? '') }}" required placeholder="Kuala Lumpur"
                                    class="w-full bg-white border border-[#e3e0d9] rounded-lg px-4 py-3 text-sm text-[#15171a] placeholder-[#a9a49b] focus:outline-none focus:border-[#0a84c6] transition">
                             @error('city') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-[#5b636e] mb-1.5 uppercase tracking-wider">Postcode</label>
-                            <input type="text" name="postcode" value="{{ old('postcode') }}" required placeholder="50000"
+                            <input type="text" name="postcode" value="{{ old('postcode', $d['postcode'] ?? '') }}" required placeholder="50000"
                                    class="w-full bg-white border border-[#e3e0d9] rounded-lg px-4 py-3 text-sm text-[#15171a] placeholder-[#a9a49b] focus:outline-none focus:border-[#0a84c6] transition">
                             @error('postcode') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
@@ -85,7 +93,7 @@
                                     class="w-full bg-white border border-[#e3e0d9] rounded-lg px-4 py-3 text-sm text-[#15171a] focus:outline-none focus:border-[#0a84c6] transition">
                                 <option value="">Select</option>
                                 @foreach(['Johor','Kedah','Kelantan','Kuala Lumpur','Labuan','Melaka','Negeri Sembilan','Pahang','Perak','Perlis','Pulau Pinang','Putrajaya','Sabah','Sarawak','Selangor','Terengganu'] as $state)
-                                    <option value="{{ $state }}" @selected(old('state') === $state)>{{ $state }}</option>
+                                    <option value="{{ $state }}" @selected(old('state', $d['state'] ?? null) === $state)>{{ $state }}</option>
                                 @endforeach
                             </select>
                             @error('state') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror

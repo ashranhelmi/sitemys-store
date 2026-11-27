@@ -11,7 +11,7 @@ export default function Edit({ mustVerifyEmail, status }) {
         <AppLayout
             title="Profile"
             breadcrumbs={[
-                { label: 'Dashboard', url: '/dashboard' },
+                { label: 'Dashboard', url: route('dashboard') },
                 { label: 'Profile', url: '/profile' },
             ]}
         >

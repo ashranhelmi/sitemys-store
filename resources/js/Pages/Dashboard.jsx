@@ -17,7 +17,7 @@ export default function Dashboard() {
     return (
         <AppLayout
             title="Dashboard"
-            breadcrumbs={[{ label: "Dashboard", url: "/dashboard" }]}
+            breadcrumbs={[{ label: "Dashboard", url: route('dashboard') }]}
         >
             <div className="pb-6">
                 <p className="text-2xl font-bold">Welcome, {user.name}!</p>
