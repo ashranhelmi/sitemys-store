@@ -93,7 +93,8 @@ async function buy(page, size) {
 
   await a.getByRole('combobox').first().click();
   await a.getByRole('option', { name: 'processing' }).click();
-  await a.getByRole('button', { name: 'Save Changes' }).click();
+  // wait for the save request itself; reloading straight after the click raced it on the live server (27 Nov)
+  await Promise.all([a.waitForResponse((r) => r.request().method() === 'PUT' && /admin\/orders\//.test(r.url())), a.getByRole('button', { name: 'Save Changes' }).click()]);
   await a.waitForLoadState('networkidle');
   await a.reload({ waitUntil: 'networkidle' });
   assert.equal((await a.locator('main, body').first().innerText()).includes('processing'), true, 'status saved');
